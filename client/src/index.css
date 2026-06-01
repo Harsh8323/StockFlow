@@ -1,0 +1,266 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @apply bg-surface-base text-slate-100;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:ring-offset-2 focus:ring-offset-black disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply btn bg-brand-500 text-white shadow-glow-sm hover:bg-brand-400;
+  }
+  .btn-secondary {
+    @apply btn border border-white/10 bg-surface-elevated text-slate-200 hover:border-white/20 hover:bg-surface-card;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent text-slate-400 hover:bg-white/5 hover:text-white;
+  }
+  .btn-outline {
+    @apply btn border border-brand-500/50 bg-transparent text-brand-400 hover:bg-brand-500/10;
+  }
+  .input {
+    @apply w-full min-w-0 max-w-full rounded-xl border border-white/10 bg-surface-card px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 transition focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/25;
+  }
+  .ui-select {
+    @apply input cursor-pointer appearance-none bg-[length:1rem] bg-[position:right_0.75rem_center] bg-no-repeat pr-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  }
+  .ui-select-sm {
+    @apply py-1.5 pl-3 pr-9 text-sm;
+    background-position: right 0.5rem center;
+  }
+  .picker-trigger {
+    @apply input cursor-pointer px-4 py-2.5;
+  }
+  .picker-trigger-open {
+    @apply border-brand-500/40;
+  }
+  .picker-panel {
+    @apply overflow-hidden rounded-xl border border-white/10 bg-surface-card py-1 shadow-card;
+  }
+  .picker-option {
+    @apply w-full px-3 py-2 text-left text-sm text-slate-300 transition;
+  }
+  .picker-option:hover:not(:disabled) {
+    @apply bg-white/5 text-white;
+  }
+  .picker-option-active {
+    @apply bg-brand-500/20 text-brand-300;
+  }
+  .picker-option:disabled {
+    @apply cursor-not-allowed opacity-40;
+  }
+  .picker-cal-header {
+    @apply flex items-center justify-between border-b border-white/10 px-3 py-2;
+  }
+  .picker-cal-nav {
+    @apply rounded-lg p-1 text-slate-400 transition hover:bg-white/5 hover:text-white;
+  }
+  .picker-cal-weekdays {
+    @apply grid grid-cols-7 gap-0.5 px-2 pt-2 text-center text-[10px] font-medium text-slate-500;
+  }
+  .picker-cal-grid {
+    @apply grid grid-cols-7 gap-0.5 p-2;
+  }
+  .picker-day {
+    @apply grid h-8 w-8 place-items-center rounded-lg text-xs text-slate-300 transition;
+  }
+  .picker-day:hover:not(:disabled) {
+    @apply bg-white/5 text-white;
+  }
+  .picker-day-out {
+    @apply text-slate-600;
+  }
+  .picker-day-today:not(.picker-day-selected) {
+    @apply font-medium text-brand-400;
+  }
+  .picker-day-selected {
+    @apply bg-brand-500 font-medium text-white;
+  }
+  .picker-day:disabled {
+    @apply cursor-not-allowed opacity-30;
+  }
+  .picker-cal-footer {
+    @apply flex items-center justify-between border-t border-white/10 px-3 py-2;
+  }
+  .picker-cal-footer button {
+    @apply text-xs text-slate-400 transition hover:text-brand-400;
+  }
+  .table-shell {
+    @apply overflow-x-auto;
+  }
+  .table-base {
+    @apply min-w-full divide-y divide-white/10 text-sm;
+  }
+  .table-base thead {
+    @apply bg-surface-elevated text-xs uppercase tracking-wide text-slate-500;
+  }
+  .table-base thead th {
+    @apply px-5 py-3 text-left font-medium;
+  }
+  .table-base tbody {
+    @apply divide-y divide-white/10 bg-transparent;
+  }
+  .table-base tbody tr {
+    @apply transition-colors hover:bg-white/5;
+  }
+  .table-base tbody td {
+    @apply px-5 py-3 text-slate-300;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-slate-300;
+  }
+  .card {
+    @apply rounded-2xl border border-white/10 bg-surface-card shadow-card;
+  }
+  .card-glass {
+    @apply rounded-2xl border border-white/10 bg-surface-card/80 shadow-card backdrop-blur-xl;
+  }
+  .card-header {
+    @apply flex items-center justify-between border-b border-white/10 px-5 py-4;
+  }
+  .card-body {
+    @apply px-5 py-4;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+  .badge-brand {
+    @apply badge bg-brand-500/20 text-brand-300 ring-1 ring-brand-500/30;
+  }
+  .badge-amber {
+    @apply badge bg-amber-500/20 text-amber-300 ring-1 ring-amber-500/30;
+  }
+  .badge-emerald {
+    @apply badge bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/30;
+  }
+  .badge-rose {
+    @apply badge bg-rose-500/20 text-rose-300 ring-1 ring-rose-500/30;
+  }
+  .landing-section {
+    @apply relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+  .landing-heading {
+    @apply text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl;
+  }
+  .landing-sub {
+    @apply mt-4 max-w-2xl text-base text-slate-400 sm:text-lg;
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-white via-white to-brand-400 bg-clip-text text-transparent;
+  }
+  .footer-brand-glow {
+    @apply relative mt-16 select-none text-center text-[10vw] font-bold uppercase leading-none tracking-tighter sm:text-8xl;
+    background: linear-gradient(
+      180deg,
+      rgba(251, 146, 60, 0.55) 0%,
+      rgba(249, 115, 22, 0.28) 45%,
+      rgba(249, 115, 22, 0.06) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 32px rgba(249, 115, 22, 0.35))
+      drop-shadow(0 0 64px rgba(249, 115, 22, 0.2));
+  }
+  .modal-shell {
+    @apply relative z-10 flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-2xl border border-white/10 bg-surface-card shadow-card sm:max-h-[85vh] sm:rounded-2xl;
+  }
+  .modal-header {
+    @apply flex shrink-0 items-start justify-between gap-4 border-b border-white/10 px-5 py-4;
+  }
+  .modal-body {
+    @apply flex-1 overflow-y-auto overscroll-contain px-5 py-4;
+  }
+  .modal-footer {
+    @apply flex shrink-0 flex-col-reverse gap-2 border-t border-white/10 bg-surface-elevated px-5 py-3 sm:flex-row sm:justify-end;
+  }
+  .dropdown-panel {
+    @apply overflow-hidden rounded-xl border border-white/10 bg-surface-card shadow-card;
+  }
+  .empty-state-box {
+    @apply flex flex-col items-center justify-center rounded-xl border border-dashed border-white/10 bg-surface-elevated/60 px-4 py-5 text-center text-sm text-slate-400;
+  }
+  .footer-brand-glow::before {
+    content: '';
+    @apply pointer-events-none absolute inset-x-0 top-1/2 -z-10 h-32 -translate-y-1/2;
+    background: radial-gradient(
+      ellipse 70% 100% at 50% 50%,
+      rgba(249, 115, 22, 0.22) 0%,
+      rgba(249, 115, 22, 0.06) 45%,
+      transparent 70%
+    );
+  }
+}
+
+/* Light mode overrides when user toggles theme */
+html:not(.dark) body {
+  @apply bg-slate-50 text-slate-900;
+}
+
+html:not(.dark) .card {
+  @apply border-slate-200 bg-white;
+}
+
+html:not(.dark) .card-header {
+  @apply border-slate-200;
+}
+
+html:not(.dark) .input {
+  @apply border-slate-300 bg-white text-slate-900 placeholder-slate-400;
+}
+
+html:not(.dark) .btn-secondary {
+  @apply border-slate-200 bg-white text-slate-700 hover:bg-slate-50;
+}
+
+html:not(.dark) .label {
+  @apply text-slate-700;
+}
+
+html:not(.dark) .landing-heading,
+html:not(.dark) h1.text-white {
+  @apply text-slate-900;
+}
+
+html:not(.dark) .card-glass {
+  @apply border-slate-200 bg-white/90;
+}
+
+/* Dashboard preview perspective — only on md+ screens */
+.dashboard-preview {
+  transform: perspective(1400px) rotateX(6deg);
+}
+@media (max-width: 767px) {
+  .dashboard-preview {
+    transform: none;
+  }
+}
+
+/* Native option list (browser-dependent; improves dark dropdowns) */
+select option,
+select optgroup {
+  background-color: #121212;
+  color: #f1f5f9;
+}
