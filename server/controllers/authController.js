@@ -22,15 +22,9 @@ const register = asyncHandler(async (req, res) => {
     throw new Error('An account with this email already exists');
   }
 
-  // Only allow 'admin' role if it's the first user OR an admin is creating it.
-  // For Phase 1, default to 'staff' unless the requester is an admin.
-  let assignedRole = 'staff';
-  const totalUsers = await User.estimatedDocumentCount();
-  if (totalUsers === 0) {
-    assignedRole = 'admin';
-  } else if (req.user && req.user.role === 'admin' && User.ROLES.includes(role)) {
-    assignedRole = role;
-  }
+  // Role is controlled via env-based admin seeding and admin-only routes.
+  // Public registrations always get 'staff'.
+  const assignedRole = req.user?.role === 'admin' && User.ROLES.includes(role) ? role : 'staff';
 
   const user = await User.create({
     name: String(name).trim(),

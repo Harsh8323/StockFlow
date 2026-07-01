@@ -84,12 +84,12 @@ const StatCard = ({ icon: Icon, label, value, tone = 'slate', sub }) => {
     emerald: 'text-emerald-700 dark:text-emerald-200 bg-emerald-100 dark:bg-emerald-900/40',
   };
   return (
-    <div className="card">
-      <div className="card-body flex items-start gap-3">
-        <span className={`grid h-10 w-10 place-items-center rounded-lg ${tones[tone]}`}>
-          <Icon className="h-5 w-5" />
+    <div className="card h-full">
+      <div className="flex h-full items-stretch gap-3 px-3 py-4">
+        <span className={`flex w-auto aspect-square shrink-0 items-center justify-center rounded-xl ${tones[tone]}`}>
+          <Icon className="h-6 w-6" />
         </span>
-        <div className="min-w-0 flex-1">
+        <div className="flex min-w-0 flex-1 flex-col justify-center">
           <p className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
             {label}
           </p>

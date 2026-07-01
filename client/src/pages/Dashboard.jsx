@@ -62,39 +62,40 @@ const formatShortDate = (iso) => {
 };
 
 const KPI = ({ icon: Icon, tone, label, value, sub, trend }) => {
-  const tones = {
-    brand:   'bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-200',
-    emerald: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200',
-    amber:   'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200',
-    rose:    'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200',
-    indigo:  'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-200',
+  const iconColors = {
+    brand:   'text-brand-600 dark:text-brand-400',
+    emerald: 'text-emerald-600 dark:text-emerald-400',
+    amber:   'text-amber-600 dark:text-amber-400',
+    rose:    'text-rose-600 dark:text-rose-400',
+    indigo:  'text-indigo-600 dark:text-indigo-400',
   };
   return (
-    <div className="card">
-      <div className="card-body">
-        <div className="flex items-center justify-between">
-          <span className={`grid h-10 w-10 place-items-center rounded-lg ${tones[tone]}`}>
-            <Icon className="h-5 w-5" />
-          </span>
-          {typeof trend === 'number' && Number.isFinite(trend) && (
-            <span
-              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
-                trend >= 0
-                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
-                  : 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300'
-              }`}
-            >
-              {trend >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-              {trend >= 0 ? '+' : ''}
-              {trend.toFixed(1)}%
-            </span>
-          )}
+    <div className="card h-full">
+      <div className="card-body flex h-full flex-col px-6 py-5">
+        <div className="flex items-center gap-2">
+          <Icon className={`h-4 w-4 ${iconColors[tone]}`} />
+          <h3 className="text-sm font-medium text-slate-600 dark:text-slate-400">{label}</h3>
         </div>
-        <p className="mt-4 text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+        <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
           {value}
         </p>
-        <p className="text-sm text-slate-500 dark:text-slate-400">{label}</p>
-        {sub && <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">{sub}</p>}
+        {(typeof trend === 'number' || sub) && (
+          <div className="mt-2 flex items-center gap-2">
+            {typeof trend === 'number' && Number.isFinite(trend) && (
+              <span
+                className={`inline-flex items-center gap-1 text-sm font-medium ${
+                  trend >= 0
+                    ? 'text-emerald-600 dark:text-emerald-400'
+                    : 'text-rose-600 dark:text-rose-400'
+                }`}
+              >
+                {trend >= 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                {trend >= 0 ? '+' : ''}{trend.toFixed(1)}%
+              </span>
+            )}
+            {sub && <span className="text-sm text-slate-500 dark:text-slate-400">{sub}</span>}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -204,6 +205,7 @@ export default function Dashboard() {
           tone="indigo"
           label="Active customers"
           value={loading.stats ? '—' : formatNumber(stats?.customers.active || 0)}
+          sub={loading.stats ? undefined : "Purchased in last 30 days"}
         />
         <KPI
           icon={Package}

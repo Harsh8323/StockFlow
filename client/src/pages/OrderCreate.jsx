@@ -191,6 +191,10 @@ export default function OrderCreate() {
                           </p>
                         </div>
 
+                        <div className="shrink-0 text-right font-medium tabular-nums text-slate-800 dark:text-slate-200">
+                          {formatCurrency(lineTotal)}
+                        </div>
+
                         <div className="flex items-center gap-1 rounded-lg ring-1 ring-slate-200 dark:ring-slate-700">
                           <button
                             type="button"
@@ -205,7 +209,7 @@ export default function OrderCreate() {
                             type="number"
                             min={1}
                             max={stock}
-                            className="w-12 border-0 bg-transparent px-1 py-1 text-center text-sm tabular-nums focus:outline-none"
+                            className="w-12 border-0 bg-transparent px-1 py-1 text-center text-sm tabular-nums focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             value={it.quantity}
                             onChange={(e) => onQtyInput(idx, e.target.value)}
                             disabled={submitting}
@@ -219,10 +223,6 @@ export default function OrderCreate() {
                           >
                             <Plus className="h-3.5 w-3.5" />
                           </button>
-                        </div>
-
-                        <div className="w-24 text-right font-medium tabular-nums text-slate-800 dark:text-slate-200">
-                          {formatCurrency(lineTotal)}
                         </div>
 
                         <button

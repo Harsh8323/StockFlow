@@ -234,7 +234,7 @@ export default function OrderDetails() {
                       <span className="font-mono">{it.sku}</span> · {formatCurrency(it.unitPrice)} × {it.quantity}
                     </p>
                   </div>
-                  <div className="w-28 text-right font-medium tabular-nums text-slate-800 dark:text-slate-200">
+                  <div className="shrink-0 text-right font-medium tabular-nums text-slate-800 dark:text-slate-200">
                     {formatCurrency(it.lineTotal)}
                   </div>
                 </div>

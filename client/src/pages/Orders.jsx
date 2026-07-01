@@ -298,12 +298,6 @@ export default function Orders() {
                   {items.map((o) => (
                     <tr
                       key={o._id}
-                      className="cursor-pointer hover:bg-slate-50/60 dark:hover:bg-slate-800/40"
-                      onClick={(e) => {
-                        // Don't trigger row click if user clicked a link inside.
-                        if (e.target.closest('a,button')) return;
-                        window.location.assign(`/orders/${o._id}`);
-                      }}
                     >
                       <td className="px-5 py-3">
                         <Link
