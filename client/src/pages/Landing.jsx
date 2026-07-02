@@ -1,463 +1,413 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
-  Boxes,
-  Package,
-  ShoppingCart,
-  Users,
-  BarChart3,
-  Shield,
-  Zap,
-  TrendingUp,
-  FileText,
-  Plus,
-  Minus,
-  Star,
-  ArrowRight,
-} from 'lucide-react';
+  FaBox,
+  FaCartShopping,
+  FaUsers,
+  FaChartLine,
+  FaClockRotateLeft,
+  FaUserShield,
+  FaStore,
+  FaTruckFast,
+  FaIndustry,
+  FaBriefcase,
+  FaStar,
+  FaPlus,
+  FaArrowRight,
+  FaCircleCheck,
+} from 'react-icons/fa6';
 
+import { Hero } from '../components/Hero.jsx';
 import Logo from '../components/Logo.jsx';
-import LandingDashboardPreview from '../components/LandingDashboardPreview.jsx';
-import { useAuth } from '../context/AuthContext.jsx';
+import bgImage from '../assets/hero-bg.png';
 
-const NAV = [
-  { href: '#features', label: 'Features' },
-  { href: '#modules', label: 'Modules' },
-  { href: '#faq', label: 'FAQ' },
+const container = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.2,
+      staggerChildren: 0.12,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 30, filter: 'blur(4px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { type: 'spring', stiffness: 70, damping: 20 },
+  },
+};
+
+const FEATURES = [
+  {
+    icon: FaBox,
+    title: 'Real-Time Inventory',
+    desc: 'Track every SKU across your warehouse with automatic stock updates, low-stock alerts, and full movement history. Never oversell or run out of stock again.',
+  },
+  {
+    icon: FaCartShopping,
+    title: 'Order Management',
+    desc: 'Create orders with atomic stock deduction, GST invoice generation, downloadable PDFs, and a complete status lifecycle from pending to delivered.',
+  },
+  {
+    icon: FaUsers,
+    title: 'Customer Insights',
+    desc: 'Build rich customer profiles with order history, total spend, activity tracking, and contact management. Know your best customers at a glance.',
+  },
+  {
+    icon: FaChartLine,
+    title: 'Analytics & KPIs',
+    desc: 'Revenue charts, top products, category breakdowns, and KPI cards with trend indicators. Make data-driven decisions with real-time business intelligence.',
+  },
+  {
+    icon: FaClockRotateLeft,
+    title: 'Audit Trail',
+    desc: 'Every stock movement is logged with before/after balances, timestamps, and user attribution. Full transparency for compliance and troubleshooting.',
+  },
+  {
+    icon: FaUserShield,
+    title: 'Role-Based Access',
+    desc: 'Admin and staff roles with granular permissions. Manage users, control access to sensitive features, and keep your team workflows secure.',
+  },
 ];
 
-const FEATURE_TABS = [
-  { id: 'orders', label: 'Fast & secure orders', icon: ShoppingCart },
-  { id: 'inventory', label: 'Real-time inventory', icon: Package },
-  { id: 'insights', label: 'Actionable insights', icon: BarChart3 },
-];
-
-const PILLARS = [
+const SOLUTIONS = [
   {
-    icon: Zap,
-    title: 'Fast operations',
-    desc: 'Create orders, deduct stock, and update customers in one atomic flow â€” no spreadsheet gymnastics.',
+    icon: FaStore,
+    title: 'Retail & E-Commerce',
+    desc: 'Multi-channel inventory sync, real-time stock visibility across stores, and streamlined order fulfillment for modern retail operations.',
   },
   {
-    icon: TrendingUp,
-    title: 'Low overhead',
-    desc: 'Built for SMBs who need professional software without enterprise pricing or complexity.',
+    icon: FaTruckFast,
+    title: 'Wholesale Distribution',
+    desc: 'Bulk order processing, supplier management, and volume-based pricing. Built for distributors who need speed without sacrificing accuracy.',
   },
   {
-    icon: Shield,
-    title: 'Secure & auditable',
-    desc: 'Role-based access, JWT auth, and a complete inventory log for every stock movement.',
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    name: 'Priya Sharma',
-    role: 'Retail owner, Bengaluru',
-    text: 'StockFlow replaced three spreadsheets. We finally know what is in stock before we promise a customer.',
-    stars: 5,
+    icon: FaIndustry,
+    title: 'Manufacturing',
+    desc: 'Raw material tracking, production workflow management, and finished goods inventory. Connect procurement to production seamlessly.',
   },
   {
-    name: 'Rahul Verma',
-    role: 'Wholesale distributor',
-    text: 'Invoice PDFs and order status workflow alone saved us hours every week. The dashboard is genuinely useful.',
-    stars: 5,
-  },
-  {
-    name: 'Anita Desai',
-    role: 'Operations lead',
-    text: 'Low-stock alerts and inventory logs mean we catch problems before they become angry phone calls.',
-    stars: 5,
-  },
-  {
-    name: 'Vikram Patel',
-    role: 'E-commerce founder',
-    text: 'Our staff uses the app daily. Admin controls for users and stock adjustments keep everything tidy.',
-    stars: 5,
-  },
-  {
-    name: 'Meera Iyer',
-    role: 'Boutique manager',
-    text: 'Clean UI, fast workflows, and GST-ready orders. It feels like software built for real shops, not demos.',
-    stars: 5,
-  },
-  {
-    name: 'Arjun Nair',
-    role: 'Warehouse supervisor',
-    text: 'Every stock change is logged. When something does not match, we can trace it in minutes.',
-    stars: 5,
+    icon: FaBriefcase,
+    title: 'Small & Medium Business',
+    desc: 'Professional inventory management without enterprise pricing or complexity. Set up in minutes, train your team in hours, and grow with confidence.',
   },
 ];
 
 const FAQS = [
   {
     q: 'What is StockFlow?',
-    a: 'StockFlow is an inventory and order management platform for small and medium businesses. It covers products, customers, orders, stock tracking, invoices, and analytics in one place.',
+    a: 'StockFlow is a modern inventory and order management platform for small and medium businesses. It covers products, customers, orders, stock tracking, GST invoices, analytics, and team management in one integrated system.',
   },
   {
     q: 'Do I need technical skills to use it?',
-    a: 'No. If you can use email and a web browser, you can use StockFlow. The interface is designed for shop owners and operations staff, not developers.',
+    a: 'No. StockFlow is designed for shop owners, operations staff, and warehouse teams — not developers. The interface is clean, intuitive, and ready to use out of the box.',
   },
   {
-    q: 'How does stock tracking work?',
-    a: 'Stock updates automatically when you create or cancel orders. Admins can also post manual adjustments with reasons. Every change is recorded in an append-only inventory log.',
+    q: 'How does inventory tracking work?',
+    a: 'Stock updates automatically when you create or cancel orders. Admins can also make manual adjustments with reason codes. Every change is recorded in an append-only inventory log with before/after balances.',
   },
   {
-    q: 'Can I export invoices?',
-    a: 'Yes. Every order has a branded PDF invoice you can download from the orders list or order detail page.',
+    q: 'Can I generate GST invoices?',
+    a: 'Yes. Every order generates a branded PDF invoice with GST breakdown, itemized totals, and your business details. Invoices are available for download from the orders list and order detail page.',
   },
   {
-    q: 'What roles are supported?',
-    a: 'Admin and Staff. Admins manage users, settings, analytics, and stock adjustments. Staff can run day-to-day operations on products, customers, and orders.',
+    q: 'What user roles are supported?',
+    a: 'Admin and Staff. Admins have full access to manage users, settings, analytics, and stock adjustments. Staff can handle day-to-day operations on products, customers, and orders.',
+  },
+  {
+    q: 'Is my data secure?',
+    a: 'Yes. StockFlow uses JWT-based authentication, role-based access control, and MongoDB with encrypted connections. All stock movements are logged for full auditability.',
   },
 ];
 
-
-function ChartMock() {
-  const bars = [40, 65, 45, 80, 55, 90, 70, 85, 60, 95, 75, 88];
+function SectionHeading({ badge, title, subtitle }) {
   return (
-    <div className="card-glass p-6 shadow-glow">
-      <div className="mb-4 flex items-center justify-between">
-        <span className="text-sm font-medium text-slate-300">Sales overview</span>
-        <span className="text-xs text-brand-400">+24% vs last period</span>
+    <motion.div variants={item} className="text-center">
+      {badge && (
+        <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium tracking-wider text-zinc-200">
+          <FaStar className="h-3 w-3 fill-amber-400" />
+          {badge}
+        </span>
+      )}
+      <h2 className="mt-6 text-3xl font-normal tracking-tight text-white sm:text-4xl lg:text-5xl">
+        {title}
+      </h2>
+      {subtitle && (
+        <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed font-light text-zinc-400 sm:text-lg">
+          {subtitle}
+        </p>
+      )}
+    </motion.div>
+  );
+}
+
+function FeatureCard({ icon: Icon, title, desc }) {
+  return (
+    <motion.div
+      variants={item}
+      className="group relative rounded-2xl p-[1px] transition-shadow duration-500 ease-out hover:shadow-xl hover:shadow-[#4514C1]/20"
+    >
+      <div className="absolute inset-0 rounded-2xl bg-white/5 transition-opacity duration-500 ease-out group-hover:opacity-0" />
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#4514C1] via-[#E8522D] to-[#F59E45] opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100" />
+      
+      <div className="relative z-10 h-full overflow-hidden rounded-[15px] bg-zinc-900/30 p-6 transition-colors duration-500 ease-out group-hover:bg-zinc-900/60 sm:p-8">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#4514C1]/5 via-transparent to-[#E8522D]/5 opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100" />
+        <span className="relative flex size-12 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-[#4514C1]/20 via-[#E8522D]/20 to-[#F59E45]/20 text-white backdrop-blur-sm transition-transform duration-500 ease-out group-hover:scale-110">
+          <Icon className="h-5 w-5 fill-current" />
+        </span>
+        <h3 className="relative mt-5 text-lg font-medium text-white">{title}</h3>
+        <p className="relative mt-2 text-sm leading-relaxed font-light text-zinc-400">{desc}</p>
       </div>
-      <div className="flex h-48 items-end justify-between gap-1.5">
-        {bars.map((h, i) => (
-          <div
-            key={i}
-            className="w-full rounded-t bg-gradient-to-t from-brand-600 to-brand-400 opacity-90"
-            style={{ height: `${h}%` }}
-          />
-        ))}
+    </motion.div>
+  );
+}
+
+function SolutionCard({ icon: Icon, title, desc }) {
+  return (
+    <motion.div
+      variants={item}
+      className="group relative rounded-2xl p-[1px] transition-shadow duration-500 ease-out hover:shadow-xl hover:shadow-[#E8522D]/20"
+    >
+      <div className="absolute inset-0 rounded-2xl bg-white/5 transition-opacity duration-500 ease-out group-hover:opacity-0" />
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#4514C1] via-[#E8522D] to-[#F59E45] opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100" />
+      
+      <div className="relative z-10 h-full overflow-hidden rounded-[15px] bg-zinc-900/30 p-6 transition-colors duration-500 ease-out group-hover:bg-zinc-900/60 sm:p-8">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#E8522D]/5 via-transparent to-[#F59E45]/5 opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100" />
+        <span className="relative flex size-14 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-[#4514C1]/30 via-[#E8522D]/30 to-[#F59E45]/30 text-white backdrop-blur-sm transition-transform duration-500 ease-out group-hover:scale-110">
+          <Icon className="h-6 w-6 fill-current" />
+        </span>
+        <h3 className="relative mt-5 text-lg font-medium text-white">{title}</h3>
+        <p className="relative mt-2 text-sm leading-relaxed font-light text-zinc-400">{desc}</p>
       </div>
-    </div>
+    </motion.div>
+  );
+}
+
+function FaqItem({ item, isOpen, onToggle }) {
+  return (
+    <motion.div
+      variants={item}
+      className="group relative rounded-2xl p-[1px] transition-shadow duration-500 ease-out hover:shadow-lg hover:shadow-[#F59E45]/10"
+    >
+      <div className="absolute inset-0 rounded-2xl bg-white/5 transition-opacity duration-500 ease-out group-hover:opacity-0" />
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#4514C1] via-[#E8522D] to-[#F59E45] opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100" />
+
+      <div className="relative z-10 overflow-hidden rounded-[15px] bg-zinc-900/30 transition-colors duration-500 ease-out group-hover:bg-zinc-900/50">
+        <button
+          type="button"
+          onClick={onToggle}
+          className="flex w-full items-center justify-between px-6 py-5 text-left text-sm font-medium text-zinc-200 transition-colors hover:text-white"
+        >
+          <span>{item.q}</span>
+          <span className={`ml-4 shrink-0 transition-transform duration-500 ease-out ${isOpen ? 'rotate-45' : ''}`}>
+            <FaPlus className={`h-3.5 w-3.5 fill-current ${isOpen ? 'text-[#F59E45]' : 'text-zinc-500 group-hover:text-white'}`} />
+          </span>
+        </button>
+        {isOpen && (
+          <div className="border-t border-white/5 px-6 pb-5 pt-4">
+            <p className="text-sm leading-relaxed font-light text-zinc-400">{item.a}</p>
+          </div>
+        )}
+      </div>
+    </motion.div>
   );
 }
 
 export default function Landing() {
-  const { isAuthenticated } = useAuth();
-  const [activeTab, setActiveTab] = useState('orders');
-  const [openFaq, setOpenFaq] = useState(0);
-
-  const activeFeature = FEATURE_TABS.find((t) => t.id === activeTab) || FEATURE_TABS[0];
+  const [openFaq, setOpenFaq] = useState(null);
 
   return (
-    <div className="min-h-screen bg-surface-base text-slate-100">
-      {/* Nav */}
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-surface-base/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Logo variant="light" />
-          <nav className="hidden items-center gap-8 md:flex">
-            {NAV.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="text-sm font-medium text-slate-400 transition hover:text-white"
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-          <div className="flex items-center gap-3">
-            {isAuthenticated ? (
-              <Link to="/dashboard" className="btn-primary text-sm !py-2 !px-5">
-                Go to dashboard
-              </Link>
-            ) : (
-              <>
-                <Link to="/login" className="hidden text-sm font-medium text-slate-300 hover:text-white sm:block">
-                  Log in
-                </Link>
-                <Link to="/register" className="btn-primary text-sm !py-2 !px-5">
-                  Get started
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-slate-950 font-sans text-white">
+      <Hero
+        logoText="StockFlow"
+        navItems={[
+          { label: 'Features', href: '#features' },
+          { label: 'Solutions', href: '#solutions' },
+          { label: 'FAQ', href: '#faq' },
+        ]}
+        signInText="Sign In"
+        signInHref="/login"
+        getStartedText="Start Free"
+        getStartedHref="/register"
+        badgeText="SMART INVENTORY MANAGEMENT"
+        titleLine1="Take Control"
+        titleLine2Start="Of Every "
+        titleLine2Accent="SKU"
+        description="Simplify your inventory and order management. Track your stock levels, create orders with built-in GST calculations, and gain operational visibility from a single dashboard."
+        primaryCtaText="Start Free"
+        primaryCtaHref="/register"
+        secondaryCtaText="Explore Features"
+        secondaryCtaHref="#features"
+        backgroundImage={bgImage}
+        socialLinks={[]}
+        stats={[
+          {
+            value: 'Instant',
+            label: 'Stock Deduction',
+            icon: <FaBox className="h-4 w-4 fill-current" />,
+          },
+          {
+            value: 'Built-in',
+            label: 'GST Support',
+            icon: <FaCircleCheck className="h-4 w-4 fill-current" />,
+          },
+          {
+            value: '100%',
+            label: 'Audit Trail',
+            icon: <FaClockRotateLeft className="h-4 w-4 fill-current" />,
+          },
+        ]}
+      />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden pt-28 pb-20 md:pt-36 md:pb-28">
-        <div className="absolute inset-0 bg-hero-glow" aria-hidden />
-        <div className="landing-section text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-4 py-1.5 text-xs font-medium text-brand-300">
-            <Boxes className="h-3.5 w-3.5" />
-            Inventory & order management reimagined
-          </span>
-          <h1 className="landing-heading mx-auto mt-8 max-w-4xl">
-            <span className="text-gradient">Step into the future</span>
-            <br />
-            of inventory management
-          </h1>
-          <p className="landing-sub mx-auto">
-            StockFlow centralizes products, orders, customers, and stock â€” with real-time
-            analytics, audit logs, and branded invoices built for modern businesses.
-          </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Link to="/register" className="btn-primary gap-2 px-8 py-3 text-base">
-              Get started <ArrowRight className="h-4 w-4" />
-            </Link>
-            <a href="#features" className="btn-outline px-8 py-3 text-base">
-              Explore features
-            </a>
-          </div>
-          <LandingDashboardPreview />
-        </div>
-      </section>
-
-      {/* Trust */}
-      <section className="border-y border-white/5 py-10">
-        <div className="landing-section">
-          <p className="text-center text-xs font-medium uppercase tracking-widest text-slate-500">
-            Trusted by retailers, wholesalers & growing brands
-          </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-8 opacity-50 grayscale">
-            {['Retail', 'Wholesale', 'E-commerce', 'Distribution', 'Workshops'].map((name) => (
-              <span key={name} className="text-lg font-semibold text-slate-400">
-                {name}
-              </span>
+      {/* Features */}
+      <section id="features" className="relative overflow-hidden px-6 py-24 sm:px-12 lg:px-20 lg:py-32">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(69,20,193,0.12),transparent)]" aria-hidden />
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="relative mx-auto max-w-6xl"
+        >
+          <SectionHeading
+            badge="EVERYTHING YOU NEED"
+            title="Your journey to smarter ops starts here"
+            subtitle="Products, customers, orders, inventory logs, and analytics — connected and consistent in one platform."
+          />
+          <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {FEATURES.map((f, i) => (
+              <FeatureCard key={f.title} {...f} />
             ))}
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* Feature tabs */}
-      <section id="features" className="py-24">
-        <div className="landing-section">
-          <h2 className="landing-heading text-center">Your journey to smarter ops starts here</h2>
-          <p className="landing-sub mx-auto text-center">
-            Everything you need to run inventory and orders â€” without the spreadsheet chaos.
-          </p>
-          <div className="mt-12 flex flex-wrap justify-center gap-3">
-            {FEATURE_TABS.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`rounded-full px-5 py-2.5 text-sm font-medium transition ${
-                  activeTab === tab.id
-                    ? 'bg-brand-500 text-white shadow-glow-sm'
-                    : 'border border-white/10 text-slate-400 hover:border-white/20 hover:text-white'
-                }`}
-              >
-                {tab.label}
-              </button>
+      {/* Solutions */}
+      <section id="solutions" className="relative overflow-hidden px-6 py-24 sm:px-12 lg:px-20 lg:py-32">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_100%,rgba(232,82,45,0.08),transparent)]" aria-hidden />
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="relative mx-auto max-w-6xl"
+        >
+          <SectionHeading
+            badge="BUILT FOR EVERY BUSINESS"
+            title="One platform. Every moving part."
+            subtitle="From retail stores to manufacturing units — StockFlow adapts to your workflow, not the other way around."
+          />
+          <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {SOLUTIONS.map((s, i) => (
+              <SolutionCard key={s.title} {...s} />
             ))}
           </div>
-          <div className="card-glass mt-10 p-8 text-center md:p-12">
-            <activeFeature.icon className="mx-auto h-12 w-12 text-brand-400" />
-            <h3 className="mt-4 text-xl font-semibold text-white">{activeFeature.label}</h3>
-            <p className="mx-auto mt-2 max-w-xl text-slate-400">
-              {activeTab === 'orders' &&
-                'Atomic order creation validates stock, generates invoice numbers, updates customer totals, and logs every movement.'}
-              {activeTab === 'inventory' &&
-                'Low-stock alerts, manual adjustments for admins, and a full movement history with search and filters.'}
-              {activeTab === 'insights' &&
-                'Dashboard KPIs, sales charts, top products, customer rankings, and deep analytics for admins.'}
-            </p>
-          </div>
-        </div>
+        </motion.div>
       </section>
-
-      {/* Experience */}
-      <section id="modules" className="py-24">
-        <div className="landing-section grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            <h2 className="landing-heading">Experience inventory made easy</h2>
-            <p className="landing-sub">
-              A professional dashboard with charts, tables, and workflows your team will actually
-              enjoy using â€” day in, day out.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link to="/register" className="btn-primary">
-                Start free
-              </Link>
-              <a href="#faq" className="btn-outline">
-                Read FAQ
-              </a>
-            </div>
-          </div>
-          <ChartMock />
-        </div>
-      </section>
-
-      {/* Pillars */}
-      <section className="py-24">
-        <div className="landing-section">
-          <h2 className="landing-heading text-center">Setting a new standard in digital operations</h2>
-          <p className="landing-sub mx-auto text-center">
-            Built for speed, clarity, and control â€” the way business software should feel.
-          </p>
-          <div className="mt-14 grid gap-6 md:grid-cols-3">
-            {PILLARS.map(({ icon: Icon, title, desc }) => (
-              <div
-                key={title}
-                className="card-glass group p-8 transition hover:border-brand-500/30 hover:shadow-glow-sm"
-              >
-                <span className="grid h-14 w-14 place-items-center rounded-2xl bg-brand-500/15 text-brand-400 ring-1 ring-brand-500/25 transition group-hover:shadow-glow-sm">
-                  <Icon className="h-7 w-7" />
-                </span>
-                <h3 className="mt-6 text-lg font-semibold text-white">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Visual hub */}
-      <section className="py-24">
-        <div className="landing-section text-center">
-          <div className="relative mx-auto flex h-48 w-48 items-center justify-center">
-            <div className="absolute inset-0 rounded-full bg-brand-500/20 blur-2xl" />
-            <span className="relative grid h-28 w-28 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 shadow-glow">
-              <Boxes className="h-14 w-14 text-white" />
-            </span>
-          </div>
-          <h2 className="landing-heading mt-8">One platform. Every moving part.</h2>
-          <p className="landing-sub mx-auto">
-            Products, customers, orders, inventory logs, users, and PDF invoices â€” connected and
-            consistent.
-          </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            {[Package, ShoppingCart, Users, FileText, BarChart3, Shield].map((Icon, i) => (
-              <span
-                key={i}
-                className="grid h-12 w-12 place-items-center rounded-xl border border-white/10 bg-surface-card text-brand-400"
-              >
-                <Icon className="h-5 w-5" />
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Audit */}
-      <section className="py-24">
-        <div className="landing-section grid items-center gap-12 lg:grid-cols-2">
-          <div className="order-2 lg:order-1">
-            <div className="card-glass p-6">
-              <p className="text-xs text-slate-500">Movement log</p>
-              <ul className="mt-4 space-y-3 text-sm">
-                <li className="flex justify-between border-b border-white/5 pb-2">
-                  <span className="text-slate-300">Order INV-2026-042</span>
-                  <span className="text-rose-400">âˆ’2 units</span>
-                </li>
-                <li className="flex justify-between border-b border-white/5 pb-2">
-                  <span className="text-slate-300">Restock â€” PO-1023</span>
-                  <span className="text-emerald-400">+50 units</span>
-                </li>
-                <li className="flex justify-between">
-                  <span className="text-slate-300">Initial stock</span>
-                  <span className="text-emerald-400">+100 units</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="order-1 lg:order-2">
-            <h2 className="landing-heading">Audit trail on every stock movement</h2>
-            <p className="landing-sub">
-              Automatic logs for orders, cancellations, and adjustments. Know who changed what,
-              when, and why â€” with before/after balances.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-24">
-        <div className="landing-section">
-          <h2 className="landing-heading text-center">What our clients say</h2>
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {TESTIMONIALS.map((t) => (
-              <div key={t.name} className="card-glass p-6">
-                <div className="flex gap-0.5 text-brand-400">
-                  {Array.from({ length: t.stars }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-current" />
-                  ))}
-                </div>
-                <p className="mt-4 text-sm leading-relaxed text-slate-300">&ldquo;{t.text}&rdquo;</p>
-                <div className="mt-6 flex items-center gap-3">
-                  <span className="grid h-10 w-10 place-items-center rounded-full bg-brand-500/20 text-sm font-semibold text-brand-300">
-                    {t.name[0]}
-                  </span>
-                  <div>
-                    <p className="text-sm font-medium text-white">{t.name}</p>
-                    <p className="text-xs text-slate-500">{t.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
 
       {/* FAQ */}
-      <section id="faq" className="py-24">
-        <div className="landing-section max-w-3xl">
-          <h2 className="landing-heading text-center">Frequently asked questions</h2>
+      <section id="faq" className="relative overflow-hidden px-6 py-24 sm:px-12 lg:px-20 lg:py-32">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(245,158,69,0.08),transparent)]" aria-hidden />
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="relative mx-auto max-w-3xl"
+        >
+          <SectionHeading
+            badge="QUESTIONS?"
+            title="Frequently asked questions"
+            subtitle="Everything you need to know about StockFlow. Still have questions? We are here to help."
+          />
           <div className="mt-12 space-y-3">
-            {FAQS.map((item, i) => (
-              <div
-                key={item.q}
-                className="overflow-hidden rounded-xl border border-white/10 bg-surface-card"
-              >
-                <button
-                  type="button"
-                  onClick={() => setOpenFaq(openFaq === i ? -1 : i)}
-                  className="flex w-full items-center justify-between px-5 py-4 text-left text-sm font-medium text-white"
-                >
-                  {item.q}
-                  {openFaq === i ? (
-                    <Minus className="h-5 w-5 shrink-0 text-brand-400" />
-                  ) : (
-                    <Plus className="h-5 w-5 shrink-0 text-slate-500" />
-                  )}
-                </button>
-                {openFaq === i && (
-                  <p className="border-t border-white/5 px-5 pb-4 text-sm leading-relaxed text-slate-400">
-                    {item.a}
-                  </p>
-                )}
-              </div>
+            {FAQS.map((faq, i) => (
+              <FaqItem
+                key={faq.q}
+                item={faq}
+                isOpen={openFaq === i}
+                onToggle={() => setOpenFaq(openFaq === i ? null : i)}
+              />
             ))}
           </div>
-        </div>
+        </motion.div>
+      </section>
+
+      {/* CTA */}
+      <section className="relative overflow-hidden border-t border-white/5 px-6 py-24 sm:px-12 lg:px-20 lg:py-32">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_50%,rgba(69,20,193,0.15),transparent)]" aria-hidden />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="relative mx-auto max-w-3xl text-center"
+        >
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium tracking-wider text-zinc-200">
+            <FaCircleCheck className="h-3 w-3 fill-amber-400" />
+            GET STARTED TODAY
+          </span>
+          <h2 className="mt-6 text-3xl font-normal tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Ready to <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 bg-clip-text text-transparent">take control</span> of your inventory?
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed font-light text-zinc-300">
+            Join thousands of businesses using StockFlow to streamline operations, reduce stockouts, and grow with confidence.
+          </p>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              to="/register"
+              className="rounded-lg bg-gradient-to-r from-[#4514C1] via-[#E8522D] to-[#F59E45] px-8 py-3 text-sm font-medium text-white shadow-lg shadow-[#E8522D]/20 outline-2 -outline-offset-2 outline-white/20 transition-all duration-200 hover:shadow-[#E8522D]/40 hover:brightness-110"
+            >
+              Start Free <FaArrowRight className="ml-2 inline h-3.5 w-3.5 fill-current" />
+            </Link>
+            <a
+              href="#features"
+              className="flex items-center justify-center rounded-[12px] border border-white/10 bg-gradient-to-r from-[#4514C1] via-[#E8522D] to-[#F59E45] p-[1px]"
+            >
+              <div className="rounded-lg bg-black px-8 py-3 text-sm font-light text-white transition-all duration-200">
+                Explore features
+              </div>
+            </a>
+          </div>
+        </motion.div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 pb-8 pt-16">
-        <div className="landing-section">
-          <div className="grid gap-8 sm:grid-cols-3">
-            <div>
-              <Logo variant="light" />
-              <p className="mt-3 text-sm text-slate-500">
-                Modern inventory & order management for growing businesses.
+      <footer className="relative border-t border-white/5 px-6 pb-8 pt-16 sm:px-12 lg:px-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="lg:col-span-2">
+              <Logo variant="light" to="/" />
+              <p className="mt-4 max-w-sm text-sm leading-relaxed font-light text-zinc-500">
+                Modern inventory and order management for growing businesses. Track SKUs, manage orders, generate GST invoices, and make data-driven decisions — all in one place.
               </p>
             </div>
             <div>
-              <p className="text-sm font-semibold text-white">Product</p>
-              <ul className="mt-3 space-y-2 text-sm text-slate-500">
-                <li><a href="#features" className="hover:text-brand-400">Features</a></li>
-                <li><a href="#modules" className="hover:text-brand-400">Modules</a></li>
-                <li><Link to="/login" className="hover:text-brand-400">Log in</Link></li>
+              <p className="text-sm font-medium text-white">Product</p>
+              <ul className="mt-4 space-y-3">
+                <li><a href="#features" className="text-sm font-light text-zinc-500 transition-colors hover:text-white">Features</a></li>
+                <li><a href="#solutions" className="text-sm font-light text-zinc-500 transition-colors hover:text-white">Solutions</a></li>
+                <li><a href="#faq" className="text-sm font-light text-zinc-500 transition-colors hover:text-white">FAQ</a></li>
+                <li><Link to="/login" className="text-sm font-light text-zinc-500 transition-colors hover:text-white">Sign In</Link></li>
               </ul>
             </div>
             <div>
-              <p className="text-sm font-semibold text-white">Company</p>
-              <ul className="mt-3 space-y-2 text-sm text-slate-500">
-                <li><a href="#faq" className="hover:text-brand-400">FAQ</a></li>
-                <li><Link to="/register" className="hover:text-brand-400">Sign up</Link></li>
+              <p className="text-sm font-medium text-white">Company</p>
+              <ul className="mt-4 space-y-3">
+                <li><Link to="/register" className="text-sm font-light text-zinc-500 transition-colors hover:text-white">Get Started</Link></li>
+                <li><Link to="/login" className="text-sm font-light text-zinc-500 transition-colors hover:text-white">Log In</Link></li>
+                <li><span className="text-sm font-light text-zinc-600">support@stockflow.io</span></li>
               </ul>
             </div>
           </div>
-          <p className="footer-brand-glow" aria-hidden>
-            StockFlow
-          </p>
-          <p className="mt-8 text-center text-xs text-slate-600">
-            Â© {new Date().getFullYear()} StockFlow. All rights reserved.
+          <p className="mt-8 text-center text-xs text-zinc-600">
+            &copy; {new Date().getFullYear()} StockFlow. All rights reserved.
           </p>
         </div>
       </footer>

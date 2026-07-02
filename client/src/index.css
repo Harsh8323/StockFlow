@@ -28,7 +28,7 @@ body {
     @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:ring-offset-2 focus:ring-offset-black disabled:cursor-not-allowed disabled:opacity-60;
   }
   .btn-primary {
-    @apply btn bg-brand-500 text-white shadow-glow-sm hover:bg-brand-400;
+    @apply btn bg-gradient-to-r from-[#4514C1] via-[#E8522D] to-[#F59E45] text-white shadow-lg shadow-amber-600/20 outline-2 -outline-offset-2 outline-white/20 hover:bg-amber-500 hover:shadow-amber-500/30;
   }
   .btn-secondary {
     @apply btn border border-white/10 bg-surface-elevated text-slate-200 hover:border-white/20 hover:bg-surface-card;
@@ -40,7 +40,7 @@ body {
     @apply btn border border-brand-500/50 bg-transparent text-brand-400 hover:bg-brand-500/10;
   }
   .input {
-    @apply w-full min-w-0 max-w-full rounded-xl border border-white/10 bg-surface-card px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 transition focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/25;
+    @apply w-full min-w-0 max-w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 transition focus:border-[#E8522D] focus:outline-none focus:ring-2 focus:ring-[#E8522D]/30;
   }
   .ui-select {
     @apply input cursor-pointer appearance-none bg-[length:1rem] bg-[position:right_0.75rem_center] bg-no-repeat pr-10;
@@ -214,39 +214,7 @@ body {
   }
 }
 
-/* Light mode overrides when user toggles theme */
-html:not(.dark) body {
-  @apply bg-slate-50 text-slate-900;
-}
-
-html:not(.dark) .card {
-  @apply border-slate-200 bg-white;
-}
-
-html:not(.dark) .card-header {
-  @apply border-slate-200;
-}
-
-html:not(.dark) .input {
-  @apply border-slate-300 bg-white text-slate-900 placeholder-slate-400;
-}
-
-html:not(.dark) .btn-secondary {
-  @apply border-slate-200 bg-white text-slate-700 hover:bg-slate-50;
-}
-
-html:not(.dark) .label {
-  @apply text-slate-700;
-}
-
-html:not(.dark) .landing-heading,
-html:not(.dark) h1.text-white {
-  @apply text-slate-900;
-}
-
-html:not(.dark) .card-glass {
-  @apply border-slate-200 bg-white/90;
-}
+/* Light mode overrides removed to lock app into premium dark aesthetic */
 
 /* Dashboard preview perspective — only on md+ screens */
 .dashboard-preview {

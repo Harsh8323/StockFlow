@@ -58,7 +58,7 @@ export default function Login() {
       footer={
         <p>
           Don't have an account?{' '}
-          <Link to="/register" className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400">
+          <Link to="/register" className="font-medium text-amber-500 hover:text-amber-400">
             Create one
           </Link>
         </p>

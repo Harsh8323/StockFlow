@@ -29,7 +29,7 @@ const linkClass = ({ isActive }) =>
   [
     'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
     isActive
-      ? 'bg-brand-500 text-white shadow-glow-sm'
+      ? 'bg-gradient-to-r from-[#4514C1] via-[#E8522D] to-[#F59E45] text-white shadow-lg shadow-amber-600/20'
       : 'text-slate-400 hover:bg-white/5 hover:text-white',
   ].join(' ');
 
@@ -87,7 +87,7 @@ export default function Sidebar({ open, onClose }) {
         <div className="mt-auto shrink-0 rounded-xl border border-white/10 bg-surface-card p-3 text-xs text-slate-500">
           <p className="font-medium text-slate-200">StockFlow v1.0</p>
           <p className="mt-0.5 text-[11px]">
-            Signed in as <span className="font-medium text-brand-400">{user?.name || '—'}</span>
+            Signed in as <span className="font-medium text-amber-500">{user?.name || '—'}</span>
           </p>
         </div>
       </aside>

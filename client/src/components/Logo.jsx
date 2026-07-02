@@ -6,8 +6,8 @@ export default function Logo({ collapsed = false, variant = 'default', to = '/' 
 
   const content = (
     <>
-      <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand-500 text-white shadow-glow-sm">
-        <Boxes className="h-4 w-4" />
+      <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#4514C1] via-[#E8522D] to-[#F59E45] text-white shadow-lg shadow-amber-600/20">
+        <Boxes className="h-5 w-5" />
       </span>
       {!collapsed && (
         <span
